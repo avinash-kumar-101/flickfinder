@@ -1,12 +1,16 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTrendingMovies, IMAGE_BASE } from "../api/tmdb";
 import Loader from "../components/Loader";
+import { useFavorites } from "../context/FavoritesContext"; // 🔥 ADD THIS
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [trailerKey, setTrailerKey] = useState(null);
+
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites(); // 🔥 ADD THIS
 
   useEffect(() => {
     getTrendingMovies().then((data) => {
@@ -16,15 +20,23 @@ export default function Home() {
   }, []);
 
   async function openTrailer(movieId) {
-     const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-            const res = await fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
-            );
-
+    const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
+    );
 
     const data = await res.json();
     const trailer = data.results.find((v) => v.type === "Trailer");
     if (trailer) setTrailerKey(trailer.key);
+  }
+
+  function handleFavorite(e, movie) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    isFavorite(movie.id)
+      ? removeFavorite(movie.id)
+      : addFavorite(movie);
   }
 
   return (
@@ -35,47 +47,60 @@ export default function Home() {
       {loading && <Loader />}
 
       <div className="movie-grid">
-        {movies.map((movie) => (
-          <div key={movie.id} className="movie-card">
-            <div className="poster-wrapper">
+        {movies.map((movie) => {
+          const fav = isFavorite(movie.id);
 
-              {/* ▶ TRAILER BUTTON */}
-              <button
-                className="play-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openTrailer(movie.id);
-                }}
-              />
+          return (
+            <div key={movie.id} className="movie-card">
+              <div className="poster-wrapper">
 
-              {/* POSTER → DETAILS */}
-              <Link to={`/movie/${movie.id}`}>
-                <img
-                  src={IMAGE_BASE + movie.poster_path}
-                  alt={movie.title}
+                {/* ❤️ FAVORITE BUTTON */}
+                <button
+                  className="fav-btn"
+                  onClick={(e) => handleFavorite(e, movie)}
+                  title={fav ? "Remove from favorites" : "Add to favorites"}
+                >
+                  {fav ? "❤️" : "🤍"}
+                </button>
+
+                {/* ▶ TRAILER BUTTON */}
+                <button
+                  className="play-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openTrailer(movie.id);
+                  }}
                 />
-              </Link>
 
-              {/* RATING */}
-              <div
-                className={`rating-badge ${
-                  movie.vote_average >= 7
-                    ? "high"
-                    : movie.vote_average >= 5
-                    ? "mid"
-                    : "low"
-                }`}
-              >
-                ⭐ {movie.vote_average.toFixed(1)}
+                {/* POSTER → DETAILS */}
+                <Link to={`/movie/${movie.id}`}>
+                  <img
+                    src={IMAGE_BASE + movie.poster_path}
+                    alt={movie.title}
+                  />
+                </Link>
+
+                {/* ⭐ RATING */}
+                <div
+                  className={`rating-badge ${
+                    movie.vote_average >= 7
+                      ? "high"
+                      : movie.vote_average >= 5
+                      ? "mid"
+                      : "low"
+                  }`}
+                >
+                  ⭐ {movie.vote_average.toFixed(1)}
+                </div>
+
+                <div className="movie-title">{movie.title}</div>
               </div>
-
-              <div className="movie-title">{movie.title}</div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* TRAILER MODAL */}
+      {/* 🎬 TRAILER MODAL */}
       {trailerKey && (
         <div
           className="trailer-backdrop"

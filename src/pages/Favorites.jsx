@@ -15,7 +15,7 @@ export default function Favorites() {
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
   }
-
+   
   if (favorites.length === 0) {
     return (
       <div className="page">
@@ -94,3 +94,5 @@ export default function Favorites() {
     </div>
   );
 }
+
+

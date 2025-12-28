@@ -1,13 +1,12 @@
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   searchMovies,
-  IMAGE_BASE,
   getAIRecommendations,
 } from "../api/tmdb";
 import useDebounce from "../hooks/useDebounce";
 import Loader from "../components/Loader";
+import MovieCard from "../components/MovieCard";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -39,12 +38,17 @@ export default function Search() {
       if (!recent.includes(debouncedQuery)) {
         const updated = [debouncedQuery, ...recent].slice(0, 6);
         setRecent(updated);
-        localStorage.setItem("recentSearches", JSON.stringify(updated));
+        localStorage.setItem(
+          "recentSearches",
+          JSON.stringify(updated)
+        );
       }
 
       // AI recommendations
       if (results[0]?.genre_ids?.length) {
-        const ai = await getAIRecommendations(results[0].genre_ids);
+        const ai = await getAIRecommendations(
+          results[0].genre_ids
+        );
         setAiMovies(ai.slice(0, 6));
       }
     }
@@ -98,22 +102,7 @@ export default function Search() {
       {/* SEARCH RESULTS */}
       <div className="movie-grid">
         {movies.map((movie) => (
-          <Link
-            key={movie.id}
-            to={`/movie/${movie.id}`}
-          >
-            <div className="movie-card">
-              <div className="poster-wrapper">
-                {movie.poster_path && (
-                  <img
-                    src={IMAGE_BASE + movie.poster_path}
-                    alt={movie.title}
-                  />
-                )}
-                <div className="movie-title">{movie.title}</div>
-              </div>
-            </div>
-          </Link>
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
 
@@ -126,24 +115,7 @@ export default function Search() {
 
           <div className="movie-grid">
             {aiMovies.map((movie) => (
-              <Link
-                key={movie.id}
-                to={`/movie/${movie.id}`}
-              >
-                <div className="movie-card">
-                  <div className="poster-wrapper">
-                    {movie.poster_path && (
-                      <img
-                        src={IMAGE_BASE + movie.poster_path}
-                        alt={movie.title}
-                      />
-                    )}
-                    <div className="movie-title">
-                      {movie.title}
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
         </>
@@ -151,3 +123,4 @@ export default function Search() {
     </div>
   );
 }
+

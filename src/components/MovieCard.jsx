@@ -1,12 +1,25 @@
+
 import { Link } from "react-router-dom";
 import { IMAGE_BASE } from "../api/tmdb";
+import { useFavorites } from "../context/FavoritesContext";
 
 export default function MovieCard({ movie }) {
   if (!movie) return null;
 
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+
   const rating = movie.vote_average
     ? movie.vote_average.toFixed(1)
     : null;
+
+  const fav = isFavorite(movie.id);
+
+  function handleFavorite(e) {
+    e.preventDefault(); // 🔥 Link click block
+    e.stopPropagation();
+
+    fav ? removeFavorite(movie.id) : addFavorite(movie);
+  }
 
   return (
     <Link
@@ -15,6 +28,16 @@ export default function MovieCard({ movie }) {
     >
       <div className="movie-card">
         <div className="poster-wrapper">
+
+          {/* ❤️ FAVORITE BUTTON */}
+          <button
+            className="fav-btn"
+            onClick={handleFavorite}
+            title={fav ? "Remove from favorites" : "Add to favorites"}
+          >
+            {fav ? "❤️" : "🤍"}
+          </button>
+
           {movie.poster_path ? (
             <img
               src={IMAGE_BASE + movie.poster_path}
@@ -36,7 +59,7 @@ export default function MovieCard({ movie }) {
             </div>
           )}
 
-          {/* ⭐ Rating badge */}
+          {/* ⭐ Rating */}
           {rating && (
             <div
               className={`rating-badge ${
@@ -51,7 +74,7 @@ export default function MovieCard({ movie }) {
             </div>
           )}
 
-          {/* 🎬 Movie title */}
+          {/* 🎬 Title */}
           <div className="movie-title">
             {movie.title}
           </div>

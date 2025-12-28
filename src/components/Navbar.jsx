@@ -1,19 +1,27 @@
-import { Link, useLocation } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 export default function Navbar() {
-  const location = useLocation();
-
-  const isActive = (path) =>
-    location.pathname === path ? "active" : "";
+  const [open, setOpen] = useState(false);
 
   return (
     <nav className="navbar">
       <div className="logo">FlickFinder</div>
 
-      <div className="links">
-        <Link to="/" className={isActive("/")}>Home</Link>
-        <Link to="/search" className={isActive("/search")}>Search</Link>
-        <Link to="/favorites" className={isActive("/favorites")}>Favorites</Link>
+      {/* ☰ MOBILE MENU BUTTON */}
+      <button
+        className="menu-btn"
+        onClick={() => setOpen(!open)}
+      >
+        ☰
+      </button>
+
+      {/* LINKS */}
+      <div className={`links ${open ? "open" : ""}`}>
+        <NavLink to="/" onClick={() => setOpen(false)}>Home</NavLink>
+        <NavLink to="/search" onClick={() => setOpen(false)}>Search</NavLink>
+        <NavLink to="/favorites" onClick={() => setOpen(false)}>Favorites</NavLink>
       </div>
     </nav>
   );

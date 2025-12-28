@@ -465,9 +465,6 @@ input[type="text"]:focus {
 
 
 
-
-
-
 /* ================= CAST SECTION ================= */
 
 .cast-section {
@@ -553,14 +550,6 @@ input[type="text"]:focus {
       #010314 100%
     );
 }
-
-/* 
-.page {
-  backdrop-filter: blur(1px);
-}
-
- */
-
 
 
 /* ================= NAVBAR UPGRADE ================= */
@@ -674,3 +663,131 @@ input[type="text"]:focus {
   color: #94a3b8;
 }
 
+
+
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+
+
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+  /* Page padding */
+  .page {
+    padding: 24px 14px 60px;
+  }
+
+  /* Headings */
+  .page h1 {
+    font-size: 26px;
+  }
+
+  .page p {
+    font-size: 14px;
+  }
+
+  /* Movie grid – 2 cards per row */
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Movie card */
+  .movie-card {
+    max-width: 100%;
+  }
+
+  /* Poster height */
+  .poster-wrapper {
+    height: 220px;
+  }
+
+  /* Title text */
+  .movie-title {
+    font-size: 13px;
+  }
+
+  /* Rating badge */
+  .rating-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  /* Favorite button */
+  .fav-btn {
+    font-size: 16px;
+    top: 8px;
+    left: 8px;
+  }
+
+  /* Trailer play button */
+  .play-btn::before {
+    font-size: 44px;
+  }
+
+  /* Trailer modal */
+  .trailer-modal {
+    width: 95%;
+    border-radius: 10px;
+  }
+}
+
+/* ================= VERY SMALL DEVICES ================= */
+@media (max-width: 420px) {
+  .movie-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .poster-wrapper {
+    height: 260px;
+  }
+}
+
+
+
+
+/* ================= MOBILE NAVBAR ================= */
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+  .menu-btn {
+    display: block;
+  }
+
+  .links {
+    position: absolute;
+    top: 64px;
+    right: 0;
+    width: 100%;
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(12px);
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+    display: none;
+  }
+
+  .links.open {
+    display: flex;
+  }
+}

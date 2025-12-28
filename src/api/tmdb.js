@@ -19,17 +19,6 @@ export async function searchMovies(query) {
   return data.results || [];
 }
 
-// // ================= MOVIE DETAILS =================
-// export async function getMovieDetails(id) {
-//   if (!id) return null;
-
-//   const res = await fetch(
-//     `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
-//   );
-
-//   return res.json();
-// }
-
 // ================= TRENDING MOVIES =================
 export async function getTrendingMovies() {
   const res = await fetch(
